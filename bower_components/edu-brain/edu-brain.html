@@ -1,9 +1,14 @@
-    <!--
+<!--
 Copyright (c) 2014 Polymer-spain - Ismael Faro. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
 -->
 
 <link rel="import" href="../polymer/polymer.html">
+
+<script src="js/deixibot.js"></script>
+<script src="js/aliziadata.js"></script>
+<script src="js/deixilog.js"></script>
+<script src="js/deixiui.js"></script>
 
 <!--
 @group Polymer Education Elements
@@ -32,8 +37,7 @@ Example to create Terminal component:
 
 <polymer-element name="edu-brain" attributes="memory language say listen">
     <template>
-            <core-ajax id="topodata" auto url="memory/{{memory}}.{{language}}.json" handleAs="json"
-           response="{{loadKnowledge}}"></core-ajax>
+        <core-ajax id="topodata" auto url="memory/{{memory}}.{{language}}.json" handleAs="json" response="{{loadKnowledge}}"></core-ajax>
     </template>
     <script>
         Polymer({
@@ -51,18 +55,23 @@ Example to create Terminal component:
             abbreviations: [],
             lastReply: undefined,
             variables: {},
-            memory:{},
+            memory: {},
             ready: function () {
                 console.log('edu-brain init');
-                brain();
+
+                var bot = new DeixiBot(botData);
+                var botName = "HAL";
+
+                this.brain();
             },
-            loadKnowledgeChanged: function(){
+            loadKnowledgeChanged: function () {
                 knowledge = this.response;
             },
             thinkAbout: function () {
 
             },
             brain: function () {
+                console.log('----brain---');
                 if (knowledge.initials) {
                     initials = knowledge.initials;
                 }
