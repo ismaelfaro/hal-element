@@ -1,0 +1,142 @@
+<!--
+Copyright (c) 2014 Polymer-spain - Ismael Faro. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+@group Polymer Education Elements
+
+`edu-hal` is a web component that show the flexibility of Polymer and webcomponents to create the next Web generation Apps. This
+component allows you understand the use of webcomponents. You can extend this class to create
+new types of chatboots or digital pets.
+
+Example to create ChatBoot component:
+
+    <edu-hal>
+        <edu-brain>
+            <edu-memory></edu-memory>
+            <edu-language>Spanish</edu-memory>
+        </edu-brain>
+        <edu-eye type="red"></edu-eye> 
+        <edu-ear></edu-ear>
+        <edu-mouth></edu-mouth>  
+        <edu-terminal><edu-terminal>
+    </edu-hal>
+
+    <script>
+      var animation = document.getElementById('fadeout');
+      animation.target = document.getElementById('el');
+      animation.play();
+    </script>
+
+@element edu-hal
+@status beta
+@homepage github.io
+
+
+  <form id="chatForm" onsubmit="">
+        </form>
+
+-->
+
+<polymer-element name="edu-hal" constructor="EduHal" attributes="language gende">
+    <template>
+        <img src="img/hal9000.jpg" alt="hal9000">
+    </template>
+    <script>
+        Polymer({
+
+            ready: function () {
+                console.log('Hal 9000 init')
+            }
+        });
+    </script>
+</polymer-element>
+
+<polymer-element name="edu-terminal" attributes="height width background">
+    <template>
+        <style>
+            #terminal {
+                width: {{width}}px;
+                height: auto;
+                border-radius:6px 6px 6px 6px;
+                padding:8px 16px 8px 16px;
+                border:2px;
+                border-width: 2px;
+                border-color:#0f0;
+                color:{{textcolor}};
+                background-color:{{background}};
+            }
+            #chatText {
+                width: {{width}}px;
+                height: {{height}};
+               
+                resize:none;
+                font-size:12px;
+                
+                color:{{textcolor}};
+                background-color:{{background}};
+                text-decoration:none;
+                outline:none;
+                vertical-align:bottom;
+                overflow:hidden;
+                border: none;
+               
+            }
+            #chatInput {
+                width: {{width}}px;
+                height:18px;
+                resize:none;
+                font-size:12px;
+                border: none;
+                color:{{textcolor}};
+                background-color:{{background}};
+                text-decoration:none;
+                outline:none;
+                
+            }
+            #chatSubmit {
+                width: 0px;
+                height: 0px;
+                padding: 0px;
+                border: none;
+                outline: none;
+            }
+
+        </style>
+        
+            <div id="terminal">
+                <textarea name="chatText" readonly id="chatText">{{consoleText}}</textarea>
+                <input id="chatInput" type="text" onkeypress="return command(event)" value="{{lastCommand}}" >
+            </div>
+            
+            <input id="chatSubmit" type="submit" hidefocus="true">
+      
+    </template>
+
+    <script>
+        command=function(e){
+            if(e.keyCode === 13){
+                this.$.globals.commands('aaa');
+            }
+        }
+        
+        Polymer({
+            background  : '#000',
+            textcolor   : '#0f0',
+            lastCommand : '',
+            consoleText : '',
+            ready: function () {
+                console.log('edu-terminal init');
+            },
+            commands: function(code){
+                console.log('bbbbahhh'+code);
+            },
+            chat: function(){
+                console.log('ehhh');
+            }
+        });
+    </script>
+</polymer-element>

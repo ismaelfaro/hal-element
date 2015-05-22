@@ -1,0 +1,147 @@
+<!--
+Copyright (c) 2014 Polymer-spain - Ismael Faro. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+@group Polymer Education Elements
+
+`edu-terminal` is a web component that show the flexibility of Polymer and webcomponents to create the next Web generation Apps. This
+component allows you understand the use of webcomponents. You can extend this class to create new types of terminal emulators.
+
+Example to create Terminal component:
+
+    <edu-terminal><edu-terminal>
+    
+    <script>
+      var animation = document.getElementById('fadeout');
+      animation.target = document.getElementById('el');
+      animation.play();
+    </script>
+
+@element edu-terminal
+@status beta
+@homepage github.io
+
+
+  <form id="chatForm" onsubmit="">
+        </form>
+
+-->
+
+<polymer-element name="edu-terminal" attributes="height width background">
+    <template>
+        <style>
+            #terminal {
+                position: relative;
+                width: {{width}}px;
+                height: {{height}}px;
+                border-radius:6px 6px 6px 6px;
+                padding:8px 16px 8px 16px;
+                border:2px;
+                border-width: 2px;
+                border-color:#0f0;
+                color:{{textcolor}};
+                background-color:{{background}};
+               
+               
+            }
+            #terminalText {
+                position: absolute; 
+                bottom: 0;
+               // display: block;
+                font-family: monospace;
+                white-space:pre;
+                width: {{width}}px;
+               // height: {{height}}px;
+                top:0px;
+                
+                font-size:12px;
+                
+                color:{{textcolor}};
+                background-color:{{background}};
+                text-decoration:none;
+                outline:none;
+                overflow:hidden;
+                border: none;
+                
+            }
+            #terminalInput {
+                font-family: monospace;
+                position: relative;
+                width: {{width}}px;
+                font-size:12px;
+                border: none;
+                color:{{textcolor}};
+                background-color:{{background}};
+                text-decoration:none;
+                outline:none;
+                
+            }
+            #chatSubmit {
+                width: 0px;
+                height: 0px;
+                padding: 0px;
+                border: none;
+                outline: none;
+            }
+#header { position: relative; 
+
+height: 300px;}
+  #header-content { position: absolute; bottom: 0; left: 0; }
+        </style>
+        
+            <div id="terminal">
+                <div id="terminalText">{{consoleText}} 
+                   {{prompt}} <input id="terminalInput" type="text" on-keypress="{{keypressHandler}}" value="{{lastCommand}}" >
+ 
+                </div>
+                
+               <!--  <textarea readonly  name="terminalText" id="terminalText">{{consoleText}}</textarea>
+               <input id="terminalInput" type="text" onkeypress="return command(event)" value="{{lastCommand}}" > -->
+                
+            </div>
+                    
+    </template>
+
+    <script>
+        command = function(e){
+            if(e.keyCode === 13){
+                cosoleText = this.$.lastCommand;
+            }
+        }
+        
+        
+        Polymer({
+            background  : '#000',
+            textcolor   : '#0f0',
+            prompt      : '#',
+            lastCommand : '',
+            consoleText : '',
+            height      : 100,
+            width       : 100,
+            terminalInput : null,
+            ready: function () {
+                console.log('edu-terminal init');                
+                this.$.terminalInput.focus();
+            },
+            commands: function(code){
+               
+            },
+            chat: function(){
+                console.log('ehhh');
+            },
+            keypressHandler: function(event, detail, sender){
+                if(event.keyCode === 13){
+                    this.consoleText += this.lastCommand+"\n";
+                    console.log(this.consoleText);
+//                    this.consoleText += this.lastCommand+"";
+                    this.lastCommand = '';
+                }
+            }
+
+        });
+    </script>
+</polymer-element>

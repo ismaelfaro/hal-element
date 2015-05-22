@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<!-- saved from url=(0032)http://deixilabs.com/alizia.html -->
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta name="description" content="Hal es un bot de charla o chatbot en español parecido a Eliza pero complementado con técnicas similares a las de AIML.">
+    <meta name="keywords" content="hal9000,chatbot,chat,bot,robot,chatterbot,charla,conversacional,español,castellano,Spanish,JavaScript,psicóloga,AIML">
+    <title>HAL 9000</title>
+    <link rel="stylesheet" href="app.css">
+    <script src="./js/deixibot.js"></script>
+    <script src="./js/aliziadata.js"></script>
+    <script src="./js/deixilog.js"></script>
+    <script src="./js/deixiui.js"></script>
+    <script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
+    <link rel="import" href="bower_components/voice-elements/dist/voice-recognition.html">
+    <script src='https://cdn.firebase.com/js/client/2.0.4/firebase.js'></script>
+
+    <script>
+        var bot = new DeixiBot(botData);
+        var botName = "HAL";
+
+
+        var conexion = new Firebase("https://hall9000.firebaseio.com");
+
+        conexion.on('child_changed', function (snapshot) {
+            var message = snapshot.val();
+            console.log('------>' + message);
+            //document.forms.chatForm.chatText.value+=message;
+            document.forms.chatForm.chatInput.value = message;
+            chat();
+        });
+    </script>
+
+
+</head>
+
+<body>
+<voice-recognition id="recognition-element"></voice-recognition>
+    
+    
+    
+    <div class="middlePane">
+
+        <table border="0" cellpadding="0" cellspacing="6" class="chatWindow">
+            <tbody>
+                <tr>
+                    <td align="right">
+
+                        <form id="chatForm" onsubmit="chat(); return false;">
+                            <table border="0" align="right" cellpadding="0" cellspacing="6">
+                                <tr>
+                                    <td align="right">
+                                        <table border="0" align="right" cellpadding="0" cellspacing="0">
+                                            <tr valign="top">
+                                                <img id="chatCam" src="img/hal9000.jpg" alt="Hal9000">
+                                            </tr>
+                                            <tr>
+                                                <td align="right">
+                                                   
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td align="right">
+                                                     <textarea name="chatText" readonly id="chatText"></textarea>
+                                                    <input id="chatInput" type="text">
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            <input id="chatSubmit" type="submit" hidefocus="true">
+                        </form>
+                    </td>
+                    <td valign="top">
+                        <iframe id="slides" class="presentation" frameborder="0" marginheight="0" marginwidth="0" src="presentation/index.html"></iframe>
+
+                    </td>
+                </tr>
+
+                
+
+                <script type="text/javascript">
+                    document.forms.chatForm.chatInput.focus();
+
+
+                    var form = document.querySelector('#recognition-form'),
+                        input = document.querySelector('#recognition-input'),
+
+                        element = document.getElementById('recognition-element'),
+                        startButton = document.getElementById('start'),
+                        stopButton = document.getElementById('stop');
+
+
+                    function start() {
+
+                        element.start();
+                    }
+
+                    function stop() {
+                        element.stop();
+
+                    }
+
+
+                    element.addEventListener('result', function (e) {
+                        input.textContent = '';
+
+                        input.textContent = e.detail.result;
+                        conexion.set({
+                            control: input.textContent
+                        });
+                    });
+
+                    start();
+                </script>
+            </tbody>
+        </table>
+
+</body>
+
+</html>

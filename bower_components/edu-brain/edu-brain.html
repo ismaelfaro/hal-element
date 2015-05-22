@@ -1,0 +1,134 @@
+    <!--
+Copyright (c) 2014 Polymer-spain - Ismael Faro. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+@group Polymer Education Elements
+
+`edu-terminal` is a web component that show the flexibility of Polymer and webcomponents to create the next Web generation Apps. This
+component allows you understand the use of webcomponents. You can extend this class to create new types of terminal emulators.
+
+Example to create Terminal component:
+
+    <edu-brain id="brain"><edu-brain>
+    
+    <script>
+        var animation = document.getElementById('brain');
+        
+    </script>
+
+@element edu-terminal
+@status beta
+@homepage github.io
+
+
+  <form id="chatForm" onsubmit="">
+        </form>
+
+-->
+
+<polymer-element name="edu-brain" attributes="memory language say listen">
+    <template>
+            <core-ajax id="topodata" auto url="memory/{{memory}}.{{language}}.json" handleAs="json"
+           response="{{loadKnowledge}}"></core-ajax>
+    </template>
+    <script>
+        Polymer({
+            language: 'es-ES',
+            knowledge: null,
+            say: '',
+            listen: '',
+            maxRecursion: 5,
+            initials: ["?"],
+            rules: [],
+            defaultReplies: ["..."],
+            preSub: null,
+            personSub: null,
+            synonymSub: null,
+            abbreviations: [],
+            lastReply: undefined,
+            variables: {},
+            memory:{},
+            ready: function () {
+                console.log('edu-brain init');
+                brain();
+            },
+            loadKnowledgeChanged: function(){
+                knowledge = this.response;
+            },
+            thinkAbout: function () {
+
+            },
+            brain: function () {
+                if (knowledge.initials) {
+                    initials = knowledge.initials;
+                }
+                if (knowledge.defaultReplies) {
+                    defaultReplies = knowledge.defaultReplies;
+                }
+
+                preSub = new MultiPassSub(knowledge.preSubs);
+                personSub = new SinglePassSub(knowledge.personSubs);
+                synonymSub = new SynonymSub(knowledge.synonyms);
+
+                if (knowledge.rules) {
+                    for (var i = 0; i < knowledge.rules.length; i++) {
+                        rules.push(new Rule(knowledge.rules[i], synonymSub));
+                    }
+                }
+
+                if (knowledge.abbreviations) {
+                    abbreviations = knowledge.abbreviations;
+                }
+
+                this.reset();
+
+            },
+            reset: function () {
+                lastReply = undefined;
+                variables = {};
+            },
+            talk: function (command) {
+                var control = null;
+
+                console.log(command);
+
+                if (userInput != '') {
+                    var userLine = userLabel + ":" + "          ".slice(-(7 - userLabel.length)) + userInput;
+                    var contesta = bot.transform(userInput);
+
+                    var botLine = botName + ":" + "          ".slice(-(7 - botName.length)) + contesta;
+
+                    form.chatInput.value = '';
+                    chatLines.push(userLine);
+                    displayLines();
+                    chatLines.push(botLine);
+
+                    //logText(sessionId,userLine + "||" + botLine);
+                    window.setTimeout(displayLines, 100);
+
+
+                } else if (chatLines.length == 0) {
+                    for (var i = 0; i < 20; i++) {
+                        chatLines.push(" ");
+                    };
+                    var contesta = bot.getInitial()
+                    var botLine = botName + ":" + "          ".slice(-(7 - botName.length)) + contesta;
+                    chatLines.push(botLine);
+                    displayLines();
+                }
+
+                if (control == true) {
+                    slidesControl();
+                    console.log('-------');
+                    control = false;
+                }
+
+            }
+
+        });
+    </script>
+</polymer-element>
