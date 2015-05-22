@@ -8,7 +8,7 @@ This code may only be used under the BSD style license found at http://polymer.g
 <script src="js/deixibot.js"></script>
 <script src="js/aliziadata.js"></script>
 <script src="js/deixilog.js"></script>
-<script src="js/deixiui.js"></script>
+<!--<script src="js/deixiui.js"></script>-->
 
 <!--
 @group Polymer Education Elements
@@ -35,9 +35,12 @@ Example to create Terminal component:
 
 -->
 
-<polymer-element name="edu-brain" attributes="memory language say listen">
+<polymer-element name="edu-brain" attributes="memory language say listen terminalInput terminalOutput face">
     <template>
-        <core-ajax id="topodata" auto url="memory/{{memory}}.{{language}}.json" handleAs="json" response="{{loadKnowledge}}"></core-ajax>
+<!--        <core-ajax id="topodata" auto url="memory/{{memory}}.{{language}}.json" handleAs="json" response="{{loadKnowledge}}"></core-ajax>-->
+   
+     <img id="chatCam" src="img/{{face}}.jpg" alt="{{face}}">
+
     </template>
     <script>
         Polymer({
@@ -45,24 +48,28 @@ Example to create Terminal component:
             knowledge: null,
             say: '',
             listen: '',
-            maxRecursion: 5,
-            initials: ["?"],
-            rules: [],
-            defaultReplies: ["..."],
-            preSub: null,
-            personSub: null,
-            synonymSub: null,
-            abbreviations: [],
-            lastReply: undefined,
-            variables: {},
-            memory: {},
+            brain: null,
+            name: '',
+            chatLines: null,
+            sessionId: 0,
+            userLabel: "TÚ",
+            speech: null,
+            slide: 1,
+            speechUserInput: '',
+            presentation: document.getElementById('slides'),
+            face: 'hal9000',
+
             ready: function () {
                 console.log('edu-brain init');
+                // Setup //
+                this.chatLines = new Array();
+                this.speech = new SpeechSynthesisUtterance();
+                this.speech.lang = 'es-ES';
 
-                var bot = new DeixiBot(botData);
-                var botName = "HAL";
+                this.brain = new DeixiBot(botData);
+                this.name = "HAL";
 
-                this.brain();
+                this.reset();
             },
             loadKnowledgeChanged: function () {
                 knowledge = this.response;
@@ -70,74 +77,95 @@ Example to create Terminal component:
             thinkAbout: function () {
 
             },
-            brain: function () {
+            brainActivity: function () {
                 console.log('----brain---');
-                if (knowledge.initials) {
-                    initials = knowledge.initials;
-                }
-                if (knowledge.defaultReplies) {
-                    defaultReplies = knowledge.defaultReplies;
-                }
 
-                preSub = new MultiPassSub(knowledge.preSubs);
-                personSub = new SinglePassSub(knowledge.personSubs);
-                synonymSub = new SynonymSub(knowledge.synonyms);
-
-                if (knowledge.rules) {
-                    for (var i = 0; i < knowledge.rules.length; i++) {
-                        rules.push(new Rule(knowledge.rules[i], synonymSub));
-                    }
-                }
-
-                if (knowledge.abbreviations) {
-                    abbreviations = knowledge.abbreviations;
-                }
-
-                this.reset();
 
             },
-            reset: function () {
-                lastReply = undefined;
-                variables = {};
+            talk: function (texto) {
+
+                if (!texto) return;
+
+                console.log(texto);
+
+                this.speech.text = texto;
+
+                window.speechSynthesis.speak(this.speech);
+                document.forms.chatForm.chatInput.focus();
+
             },
-            talk: function (command) {
+            chat: function () {
+                console.info('chat');
+                var form = document.forms.chatForm;
+                var userInput = form.chatInput.value;
                 var control = null;
-
+                                
+                if (this.speechUserInput === '') {
+                    command = userInput;
+                } else {
+                    command = speechUserInput;
+                }
                 console.log(command);
+                if (command === "siguiente") {
+                    this.slide += 1;
+                    console.log('+1')
+                    control = true;
+                    userInput = '';
+                }
+                if (command === "anterior") {
+                    this.slide -= 1;
+                    control = true;
+                    userInput = '';
+                }
 
                 if (userInput != '') {
                     var userLine = userLabel + ":" + "          ".slice(-(7 - userLabel.length)) + userInput;
-                    var contesta = bot.transform(userInput);
+                    var contesta = this.brain.transform(userInput);
 
                     var botLine = botName + ":" + "          ".slice(-(7 - botName.length)) + contesta;
 
                     form.chatInput.value = '';
-                    chatLines.push(userLine);
-                    displayLines();
-                    chatLines.push(botLine);
+                    this.chatLines.push(userLine);
+                    this.displayLines();
+                    this.chatLines.push(botLine);
 
                     //logText(sessionId,userLine + "||" + botLine);
-                    window.setTimeout(displayLines, 100);
+                    window.setTimeout(this.displayLines, 100);
 
 
-                } else if (chatLines.length == 0) {
+                } else if (this.chatLines.length == 0) {
                     for (var i = 0; i < 20; i++) {
-                        chatLines.push(" ");
+                        this.chatLines.push(" ");
                     };
-                    var contesta = bot.getInitial()
-                    var botLine = botName + ":" + "          ".slice(-(7 - botName.length)) + contesta;
-                    chatLines.push(botLine);
-                    displayLines();
+                    var contesta = this.brain.getInitial()
+                    var botLine = this.name + ":" + "          ".slice(-(7 - this.name.length)) + contesta;
+                    this.chatLines.push(botLine);
+                    this.displayLines();
                 }
 
                 if (control == true) {
-                    slidesControl();
+                    //this.slidesControl();
                     console.log('-------');
                     control = false;
                 }
 
-            }
+                this.talk(contesta);
 
+            },
+            reset: function () {
+                //sessionId = generateSessionId();
+                console.info('reset');
+                this.brain.reset();
+                this.chatLines.length = 0;
+                document.forms.chatForm.chatInput.value = '';
+                document.forms.chatForm.chatInput.focus();
+                this.chat();
+            },
+            displayLines: function() {
+                var chatText = document.getElementById('chatText');
+                chatText.value = this.chatLines.join('\n');
+                chatText.scrollTop = chatText.scrollHeight;
+            }
         });
     </script>
 </polymer-element>
