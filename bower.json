@@ -1,0 +1,19 @@
+{
+  "name": "hal-element",
+  "version": "0.0.0",
+  "homepage": "https://github.com/ismaelfaro/hal-element",
+  "authors": [
+    "ismaelfaro <soy@ismaelfaro.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "voice-elements": "~0.2.0"
+  }
+}

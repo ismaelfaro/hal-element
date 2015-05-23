@@ -1,0 +1,115 @@
+<!--
+Copyright (c) 2014 Polymer-spain - Ismael Faro. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+@group Polymer Education Elements
+
+`edu-terminal` is a web component that show the flexibility of Polymer and webcomponents to create the next Web generation Apps. This
+component allows you understand the use of webcomponents. You can extend this class to create new types of terminal emulators.
+
+Example to create Terminal component:
+
+    <edu-terminal><edu-terminal>
+    
+    <script>
+      var animation = document.getElementById('fadeout');
+      animation.target = document.getElementById('el');
+      animation.play();
+    </script>
+
+@element edu-terminal
+@status beta
+@homepage github.io
+
+
+  <form id="chatForm" onsubmit="">
+        </form>
+
+-->
+
+<polymer-element name="edu-terminal" attributes="height width  heightSecondary background text input command">
+    <template>
+        <style>
+            #terminalText {
+                /*                margin-left: 24px;*/
+                
+                height: {{height}}px;
+                width: {{width}}px;
+                padding: 8px 16px 0px 16px;
+                resize: none;
+                font-size: 12px;
+                border-radius: 6px 6px 0px 0px;
+                border-bottom: 0px;
+                color: #0f0;
+                background-color: #000;
+                text-decoration: none;
+                outline: none;
+                vertical-align: bottom;
+                overflow: hidden;
+                border-width: 1px;
+                position: absolute;
+            }
+            
+            #terminalInput {
+                resize: none;
+                font-size: 12px;
+                top: {{heightSecondary}}px;
+                padding: 0px 16px 8px 16px;
+                width: {{width}}px;
+                height: 14px;
+                border-radius: 0px 0px 6px 6px;
+                border-top: 0px;
+                border-width: 1px;
+                border-color: #0f0;
+                color: #0f0;
+                background-color: #000;
+                text-decoration: none;
+                outline: none;
+                cursor: url(cursor.cur);
+                position: absolute;
+            }
+            
+            #chatSubmit {
+                position: absolute;
+                width: 0px;
+                height: 0px;
+                padding: 0px;
+                border: none;
+                outline: none;
+            }
+        </style>
+
+        <textarea name="terminalText" readonly id="terminalText">{{text}}</textarea>
+        <input id="terminalInput" type="text" value="{{input}}" placeholder=">" on-keypress="{{keypressHandler}}">
+
+    </template>
+
+    <script>
+        Polymer({
+            command: '',
+            heightSecondary: 0,
+            ready: function () {              
+                this.heightSecondary= parseInt (this.height) +8;
+                this.$.terminalInput.focus();
+            },
+            introCommand: function(command){
+                this.$.terminalText.value += '\n> '+this.$.terminalInput.value;
+                this.$.terminalText.scrollTop = this.$.terminalText.scrollHeight;
+                this.input = '';
+            },
+            commandChanged: function(attrName, oldVal, newVal) {
+                this.introCommand(newVal);
+            },
+            keypressHandler: function (event, detail, sender) {
+
+                if (event.charCode === 13) {
+                    this.command = this.input;
+                }
+            }
+        });
+    </script>
+</polymer-element>

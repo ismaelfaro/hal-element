@@ -69,12 +69,15 @@ img.thumbnail {
 }
 
 #chatBotName {
+    position: absolute;
+    float: left;
 	text-align: center;
 	color: #CC0000;
 }
+/*
 
 #chatText {
-	//margin-left: 24px;
+	margin-left: 24px;
 	height: 40px; 
 	width: 206px;  
 	padding: 8px 16px 0px 16px;
@@ -110,6 +113,7 @@ img.thumbnail {
 	outline: none;
 	cursor: url(cursor.cur);
 }
+*/
 
 #chatSubmit {
 	width: 0px;

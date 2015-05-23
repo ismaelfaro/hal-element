@@ -1,0 +1,42 @@
+<!--
+Copyright (c) 2014 Polymer-spain - Ismael Faro. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+@group Polymer Education Elements
+
+@element edu-presenter
+@status beta
+@homepage github.io
+
+-->
+
+<polymer-element name="edu-presenter" attributes="url slide">
+    <template>
+        <style>
+            .presentation {
+                width: 1024px;
+                height: 768px;
+                /*
+                width: 100%;
+                height: 100%;
+*/
+            }
+        </style>
+
+        <iframe id="slides" class="presentation" frameborder="0" marginheight="0" marginwidth="0" src="{{url}}"></iframe>
+
+    </template>
+
+    <script>
+        Polymer({
+            slide: 0,
+            ready: function () {
+                console.log('edu-presenter init');
+            }
+        });
+    </script>
+</polymer-element>
